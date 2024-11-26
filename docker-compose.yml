@@ -1,0 +1,36 @@
+version: '1'
+services:
+  server:
+    build: ./server
+    ports:
+      - "7000:7000"
+    environment:
+      - DATABASE_URL=postgres://postgres:root@db:5432/toDobd
+    networks:
+      - my_network
+
+  client:
+    build: ./client
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://server:7000
+    networks:
+      - my_network
+
+  db:
+    image: postgres
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_NAME: toDobd
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge

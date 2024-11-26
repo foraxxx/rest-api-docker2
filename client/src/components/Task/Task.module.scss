@@ -1,0 +1,26 @@
+.task {
+  width: 300px;
+  padding: 10px;
+
+  border-radius: 15px;
+  background-color: #fff;
+
+  &__title {
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__deleteButton {
+    width: 40px;
+    aspect-ratio: 1;
+
+    outline: none;
+    border: none;
+    background-color: transparent;
+  }
+}
