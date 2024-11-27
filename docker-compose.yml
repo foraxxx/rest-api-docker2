@@ -1,36 +1,49 @@
-version: '1'
+version: '3.8'
+
 services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: toDobd
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
   server:
     build: ./server
+    container_name: server
+    environment:
+      DB_NAME: toDobd
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_HOST: db
+      DB_PORT: 5432
     ports:
       - "7000:7000"
-    environment:
-      - DATABASE_URL=postgres://postgres:root@db:5432/toDobd
+    depends_on:
+      - db
     networks:
-      - my_network
+      - app_network
 
   client:
     build: ./client
+    container_name: client
     ports:
-      - "3000:80"
-    environment:
-      - REACT_APP_API_URL=http://server:7000
+      - "3000:3000"
+    depends_on:
+      - server
     networks:
-      - my_network
+      - app_network
 
-  db:
-    image: postgres
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: root
-      DB_NAME: toDobd
-    ports:
-      - "5432:5432"
-    networks:
-      - my_network
+volumes:
+  postgres_data:
 
 networks:
-  my_network:
+  app_network:
     driver: bridge
