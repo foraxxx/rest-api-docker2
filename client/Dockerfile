@@ -1,3 +1,4 @@
+# Этап сборки
 FROM node:18 AS builder
 WORKDIR /app
 
@@ -6,22 +7,22 @@ COPY package*.json ./
 RUN npm install
 
 # Копируем весь проект и строим его
-COPY . .
+COPY . ./
 RUN npm run build
 
-# Финальный образ для обслуживания собранного приложения
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
+# Финальный образ для обслуживания приложения без Nginx
+FROM node:18
+WORKDIR /app
 
-# Копируем скомпилированные файлы из этапа сборки
-COPY --from=builder /app/dist .
+# Копируем собранные файлы из этапа сборки
+COPY --from=builder /app/dist ./dist
+COPY package*.json ./
 
-# Удаляем дефолтную конфигурацию nginx и добавляем свою
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
+# Устанавливаем зависимости для работы приложения
+RUN npm install --production
 
 # Открываем порт
-EXPOSE 80
+EXPOSE 3000
 
-# Запускаем Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Запуск сервера для обслуживания статических файлов
+CMD ["npx", "serve", "-s", "dist", "-l", "3000"]

@@ -142,75 +142,79 @@ const Tasks = () => {
 
   return (
     <div className="container">
-      <Form
-        onFinish={createTask}
-        form={form}
-        style={{
-          maxWidth: 500,
-          backgroundColor: '#fff',
-          padding: '20px',
-          borderRadius: 10,
-          marginBottom: 20,
-        }}
-      >
-        Добавить задачу
-        <Form.Item
-          name="text"
-          rules={[
-            {
-              required: true,
-              message: 'Укажите название',
-            },
-          ]}
+      <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+        <Form
+          onFinish={createTask}
+          form={form}
+          style={{
+            maxWidth: 500,
+            width: '100%',
+            backgroundColor: '#fff',
+            padding: '20px',
+            borderRadius: 10,
+            marginBottom: 20,
+          }}
         >
-          <Input placeholder="Название задачи"/>
-        </Form.Item>
-        <Form.Item
-          name="deadline"
-          rules={[
-            {
-              required: true,
-              message: 'Укажите срок выполнения!',
-            },
-          ]}
+          Добавить задачу
+          <Form.Item
+            name="text"
+            rules={[
+              {
+                required: true,
+                message: 'Укажите название',
+              },
+            ]}
+          >
+            <Input placeholder="Название задачи"/>
+          </Form.Item>
+          <Form.Item
+            name="deadline"
+            rules={[
+              {
+                required: true,
+                message: 'Укажите срок выполнения!',
+              },
+            ]}
+          >
+            <DatePicker disabledDate={disablePastDates} placeholder="Срок выполнения"/>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" >
+              Создать
+            </Button>
+          </Form.Item>
+        </Form>
+        <Form
+          onFinish={createStatus}
+          form={form2}
+          style={{
+            maxWidth: 500,
+            backgroundColor: '#fff',
+            padding: '20px',
+            borderRadius: 10,
+            marginBottom: 20,
+          }}
         >
-          <DatePicker disabledDate={disablePastDates} placeholder="Срок выполнения"/>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" >
-            Создать
-          </Button>
-        </Form.Item>
-      </Form>
-      <Form
-        onFinish={createStatus}
-        form={form2}
-        style={{
-          maxWidth: 500,
-          backgroundColor: '#fff',
-          padding: '20px',
-          borderRadius: 10,
-          marginBottom: 20,
-        }}
-      >
-        Добавить статус
-        <Form.Item
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: 'Укажите название статуса',
-            },
-          ]}
-        >
-          <Input placeholder="Название статуса"/>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" >
-            Создать
-          </Button>
-        </Form.Item>
-      </Form>
+          Добавить статус
+          <Form.Item
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: 'Укажите название статуса',
+              },
+            ]}
+          >
+            <Input placeholder="Название статуса"/>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" >
+              Создать
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+
       <Layout>
 
         {tasks.map((task) => {

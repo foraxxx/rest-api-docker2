@@ -52,14 +52,13 @@ class TaskController {
 
   async delete (req, res) {
     try {
-      console.log(req.params)
       const { id } = req.params
       const deleted = await Task.destroy({where: {id}})
 
       if (deleted > 0) {
         return res.json({message: 'Задача успешно удалена'})
       } else {
-        return res.status(404).json({ message: 'Задача не найдена' });
+        return res.status(404).json({task: deleted, message: 'Задача не найдена' });
       }
     } catch(error) {
         return res.status(500).json({ message: 'Ошибка при удалении задачи' })
