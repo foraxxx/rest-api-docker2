@@ -3,12 +3,7 @@ import {$host} from "./index.js"
 
 export const fetchTasks = async () => {
   try {
-    const response = await axios.get('http://localhost:7000/api/tasks', {
-      proxy: {
-        host: 'localhost',
-        port: 7000
-      }
-    })
+    const response = await axios.get('http://localhost:7000/api/tasks',)
 
     return response.data;
   } catch (error) {

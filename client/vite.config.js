@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
   plugins: [react()],
   css: {
     preprocessorOptions: {
@@ -12,5 +11,13 @@ export default defineConfig({
       },
     },
   },
+  // server: {
+  //   proxy: {
+  //     '/api': 'http://localhost:7000', // Перенаправление запросов с клиента
+  //   },
+  // },
+  // server: {
+  //   host: true,
+  // },
 })
 

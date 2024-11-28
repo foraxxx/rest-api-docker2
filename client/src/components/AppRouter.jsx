@@ -7,10 +7,8 @@ const AppRouter = (props) => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/api/tasks" />} />
-        <Route path='/api/tasks' element={<Tasks/>}/>
-
+        <Route path="/api/tasks" element={<Tasks />} />
       </Routes>
-
     </BrowserRouter>
   )
 }

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {createOneTask, deleteOneTask, fetchTasks, updateTask} from "../API/taskAPI.js"
 import Task from "../components/Task/Task.jsx"
 import Layout from "../components/layout/Layout.jsx"
-import {fetchStatuses} from "../API/statusAPI.js"
+import {createOneStatus, fetchStatuses} from "../API/statusAPI.js"
 import {Button, Cascader, ConfigProvider, DatePicker, Form, Input, message, Segmented} from "antd"
 import dayjs from "dayjs"
 
@@ -13,6 +13,7 @@ const Tasks = () => {
   const [statuses, setStatuses] = useState([])
   const [error, setError] = useState(null)
   const [form] = Form.useForm();
+  const [form2] = Form.useForm();
   const variant = Form.useWatch('variant', form);
 
   const changeStatus = async (taskId, selectedStatus) => {
@@ -41,8 +42,12 @@ const Tasks = () => {
       label: status.label
     })),
     onClick: (e) => {
-      const selectedStatus = statuses.find(status => status.id === parseInt(e.key, 10));
+      // const selectedStatus = statuses.find(status => status.id === parseInt(e.key, 10))
       changeStatus(taskId, e.key)
+    },
+    style: {
+      maxHeight: '200px',
+      overflowY: 'auto'
     }
   })
 
@@ -81,7 +86,7 @@ const Tasks = () => {
       setTasks(tasks.filter(task => task.id !== taskId))
       message.success(deletedTask.message);
     } catch(error) {
-      const errorMessage = error.response?.data?.message || 'Ошибка при удалении задачи';
+      const errorMessage = error.response?.data?.message;
       message.error(errorMessage);
     }
   }
@@ -104,14 +109,36 @@ const Tasks = () => {
       message.success(createdTask.message);
       form.resetFields();
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Ошибка при добавлении задачи';
+      const errorMessage = error.response?.data?.message;
       message.error(errorMessage);
     }
   }
 
   const disablePastDates = (current) => {
     return current && current < dayjs().startOf('day');
-  };
+  }
+
+  const createStatus = async (values) => {
+    try {
+      const { name } = values
+      const { status: newStatus, message: serverMessage } = await createOneStatus(name)
+      console.log(newStatus)
+
+      const statusesData = await fetchStatuses()
+      const updatedStatuses = statusesData.map(status => ({
+        id: status.id.toString(),
+        label: status.name,
+      }))
+      setStatuses(updatedStatuses)
+      form2.resetFields();
+      // setStatuses((prevStatuses) => [...prevStatuses, newStatus])
+      message.success(serverMessage)
+    } catch(error) {
+      console.error(error)
+      const errorMessage = error.response?.data?.message;
+      message.error(errorMessage);
+    }
+  }
 
   return (
     <div className="container">
@@ -126,6 +153,7 @@ const Tasks = () => {
           marginBottom: 20,
         }}
       >
+        Добавить задачу
         <Form.Item
           name="text"
           rules={[
@@ -154,7 +182,37 @@ const Tasks = () => {
           </Button>
         </Form.Item>
       </Form>
+      <Form
+        onFinish={createStatus}
+        form={form2}
+        style={{
+          maxWidth: 500,
+          backgroundColor: '#fff',
+          padding: '20px',
+          borderRadius: 10,
+          marginBottom: 20,
+        }}
+      >
+        Добавить статус
+        <Form.Item
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: 'Укажите название статуса',
+            },
+          ]}
+        >
+          <Input placeholder="Название статуса"/>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" >
+            Создать
+          </Button>
+        </Form.Item>
+      </Form>
       <Layout>
+
         {tasks.map((task) => {
           return (
             <Task key={task.id}

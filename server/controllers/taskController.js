@@ -5,6 +5,11 @@ class TaskController {
     try {
       const { text, deadline } = req.body
       const status = await TaskStatus.findOne({where: {name: 'В процессе'}})
+
+      if (!status) {
+        return res.status(500).json({message: 'Сперва добавьте статус "В процессе"'})
+      }
+
       const task = await Task.create({text, deadline, TaskStatusId: status.id})
 
       return res.json({status: status.name, task: task, message: 'Задача успешно создана'})
@@ -47,6 +52,7 @@ class TaskController {
 
   async delete (req, res) {
     try {
+      console.log(req.params)
       const { id } = req.params
       const deleted = await Task.destroy({where: {id}})
 

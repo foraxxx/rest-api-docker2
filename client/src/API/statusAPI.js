@@ -15,3 +15,14 @@ export const fetchStatuses = async () => {
     throw error;
   }
 }
+
+export const createOneStatus = async (name) => {
+  try {
+    const response = await axios.post('http://localhost:7000/api/statuses', {name} )
+
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при добавлении статуса:', error)
+    throw error;
+  }
+}
